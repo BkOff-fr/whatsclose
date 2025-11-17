@@ -2,25 +2,13 @@
 
 import { useEffect, useState, useRef, Suspense } from 'react'
 import { useInView } from '@/lib/hooks'
-import dynamic from 'next/dynamic'
 import { Canvas } from '@react-three/fiber'
 
-// Dynamically import 3D components to reduce initial bundle size
-const ParticleField = dynamic(() => import('./3d/ParticleField'), {
-  ssr: false,
-})
-
-const LockerNetwork = dynamic(() => import('./3d/LockerNetwork'), {
-  ssr: false,
-})
-
-const MapGlobe = dynamic(() => import('./3d/MapGlobe'), {
-  ssr: false,
-})
-
-const FloatingProducts = dynamic(() => import('./3d/FloatingProducts'), {
-  ssr: false,
-})
+// Direct imports instead of dynamic for R3F components
+import ParticleField from './3d/ParticleField'
+import LockerNetwork from './3d/LockerNetwork'
+import MapGlobe from './3d/MapGlobe'
+import FloatingProducts from './3d/FloatingProducts'
 
 type SceneType = 'particles' | 'lockers' | 'globe' | 'products' | 'none'
 

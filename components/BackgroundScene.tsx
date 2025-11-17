@@ -1,25 +1,14 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, Suspense } from 'react'
 import { useInView } from '@/lib/hooks'
-import dynamic from 'next/dynamic'
+import { Canvas } from '@react-three/fiber'
 
-// Dynamically import 3D components to reduce initial bundle size
-const ParticleField = dynamic(() => import('./3d/ParticleField'), {
-  ssr: false,
-})
-
-const LockerNetwork = dynamic(() => import('./3d/LockerNetwork'), {
-  ssr: false,
-})
-
-const MapGlobe = dynamic(() => import('./3d/MapGlobe'), {
-  ssr: false,
-})
-
-const FloatingProducts = dynamic(() => import('./3d/FloatingProducts'), {
-  ssr: false,
-})
+// Direct imports instead of dynamic for R3F components
+import ParticleField from './3d/ParticleField'
+import LockerNetwork from './3d/LockerNetwork'
+import MapGlobe from './3d/MapGlobe'
+import FloatingProducts from './3d/FloatingProducts'
 
 type SceneType = 'particles' | 'lockers' | 'globe' | 'products' | 'none'
 
@@ -64,30 +53,62 @@ export default function BackgroundScene({
     >
       {/* Particles - Hero Section */}
       {currentScene === 'particles' && (
-        <div className="absolute inset-0">
-          <ParticleField />
-        </div>
+        <Canvas
+          className="absolute inset-0"
+          camera={{ position: [0, 0, 15], fov: 60 }}
+          dpr={[1, 2]}
+        >
+          <Suspense fallback={null}>
+            <ParticleField />
+          </Suspense>
+        </Canvas>
       )}
 
       {/* Locker Network - Problem/Innovation Section */}
       {currentScene === 'lockers' && (
-        <div className="absolute inset-0">
-          <LockerNetwork />
-        </div>
+        <Canvas
+          className="absolute inset-0"
+          camera={{ position: [0, 0, 15], fov: 60 }}
+          dpr={[1, 2]}
+        >
+          <ambientLight intensity={0.4} />
+          <directionalLight position={[10, 10, 5]} intensity={0.8} />
+          <directionalLight position={[-10, -10, -5]} intensity={0.3} color="#8b5cf6" />
+          <Suspense fallback={null}>
+            <LockerNetwork />
+          </Suspense>
+        </Canvas>
       )}
 
       {/* Map Globe - Ecosystem Section */}
       {currentScene === 'globe' && (
-        <div className="absolute inset-0">
-          <MapGlobe />
-        </div>
+        <Canvas
+          className="absolute inset-0"
+          camera={{ position: [0, 0, 15], fov: 60 }}
+          dpr={[1, 2]}
+        >
+          <ambientLight intensity={0.4} />
+          <directionalLight position={[10, 10, 5]} intensity={0.8} />
+          <pointLight position={[0, 5, 0]} intensity={0.5} color="#6366f1" />
+          <Suspense fallback={null}>
+            <MapGlobe />
+          </Suspense>
+        </Canvas>
       )}
 
       {/* Floating Products - Experience Section */}
       {currentScene === 'products' && (
-        <div className="absolute inset-0">
-          <FloatingProducts />
-        </div>
+        <Canvas
+          className="absolute inset-0"
+          camera={{ position: [0, 0, 15], fov: 60 }}
+          dpr={[1, 2]}
+        >
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[5, 5, 5]} intensity={0.6} />
+          <Suspense fallback={null}>
+            <FloatingProducts />
+          </Suspense>
+        </Canvas>
       )}
 
       {/* Gradient overlay for better text readability */}
